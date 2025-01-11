@@ -6,21 +6,26 @@
     <title>Color Wheel</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="logo">MySite</div>
-        <div class="menu-toggle" id="mobile-menu">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-        <ul class="nav-list">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<body id="body">
+    <header>
+        <h1>Color Wheel</h1>
+    </header>
+    <canvas id="colorWheel"></canvas>
+    <input type="text" id="colorPicker" readonly>
+    <button id="clearColor">Clear Color</button>
+
+    <div id="slider-container">
+        <label for="hueSlider">Hue:</label>
+        <input type="range" id="hueSlider" min="0" max="360" value="180" />
+        
+        <label for="saturationSlider">Saturation:</label>
+        <input type="range" id="saturationSlider" min="0" max="100" value="100" />
+        
+        <label for="brightnessSlider">Brightness:</label>
+        <input type="range" id="brightnessSlider" min="0" max="100" value="50" />
+    </div>
+
+    <div id="colorInfo"></div>
 
     <script src="script.js"></script>
 </body>
