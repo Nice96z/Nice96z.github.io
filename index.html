@@ -3,30 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Wheel</title>
+    <title>Ultimate Color Picker</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body id="body">
-    <header>
-        <h1>Color Wheel</h1>
-    </header>
-    <canvas id="colorWheel"></canvas>
-    <input type="text" id="colorPicker" readonly>
-    <button id="clearColor">Clear Color</button>
+<body>
+    <div class="color-picker">
+        <h2>Ultimate Color Picker</h2>
+        
+        <label for="color-input-1">Color 1:</label>
+        <input type="color" id="color-input-1" value="#ff0000">
+        <label for="color-input-2">Color 2:</label>
+        <input type="color" id="color-input-2" value="#0000ff">
+        
+        <br>
+        <label for="opacity">Opacity:</label>
+        <input type="range" id="opacity" min="0" max="1" step="0.01" value="1"><br>
+        
+        <h3>Color Adjustment</h3>
+        <label for="brightness">Brightness:</label>
+        <input type="range" id="brightness" min="-100" max="100" value="0"><br>
+        <label for="saturation">Saturation:</label>
+        <input type="range" id="saturation" min="-100" max="100" value="0"><br>
+        <label for="hue">Hue:</label>
+        <input type="range" id="hue" min="-180" max="180" value="0"><br>
 
-    <div id="slider-container">
-        <label for="hueSlider">Hue:</label>
-        <input type="range" id="hueSlider" min="0" max="360" value="180" />
+        <h3>Gradient Type</h3>
+        <select id="gradient-type">
+            <option value="linear">Linear</option>
+            <option value="radial">Radial</option>
+            <option value="conic">Conic</option>
+        </select>
         
-        <label for="saturationSlider">Saturation:</label>
-        <input type="range" id="saturationSlider" min="0" max="100" value="100" />
+        <h3>Color Harmonies</h3>
+        <button id="generate-harmonies">Generate Color Harmonies</button>
+        <div id="color-harmonies"></div>
+
+        <h3>Color Accessibility Checker</h3>
+        <div>
+            <label for="contrast-bg">Background Color:</label>
+            <input type="color" id="contrast-bg" value="#ffffff">
+            <button id="check-contrast">Check Contrast</button>
+            <p id="contrast-result"></p>
+            <p id="accessibility-level"></p>
+        </div>
+
+        <h3>Palette Generators</h3>
+        <button id="generate-palette">Generate Analogous Palette</button>
+        <div id="generated-palette"></div>
+
+        <h3>Customizable Preview</h3>
+        <div id="preview-box" class="preview-box"></div>
+
+        <h3>Dynamic Color Formats</h3>
+        <div id="color-formats"></div>
+
+        <h3>User Saved Palettes</h3>
+        <div id="saved-palettes"></div>
+        <button id="save-palette">Save Palette</button>
         
-        <label for="brightnessSlider">Brightness:</label>
-        <input type="range" id="brightnessSlider" min="0" max="100" value="50" />
+        <div class="actions">
+            <button id="export-json">Export JSON</button>
+            <button id="export-scss">Export SCSS</button>
+            <button id="copy-colors">Copy Colors</button>
+            <button id="toggle-theme">Toggle Dark/Light Mode</button>
+        </div>
     </div>
-
-    <div id="colorInfo"></div>
-
     <script src="script.js"></script>
 </body>
 </html>
