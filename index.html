@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,9 +11,9 @@
     <h1 class="color-picker-title">Futuristic Color Picker</h1>
 
     <section class="main-section">
-      <canvas id="color-wheel" class="color-wheel" role="color-picker" aria-labelledby="color-picker-title"
-                tabindex="0" aria-label="Color Wheel"></canvas>
-      <div class="preview-box" id="preview" role="img" aria-label="Color Preview" aria-live="polite"></div>
+      <canvas id="color-wheel" class="color-wheel" role="region" aria-label="Color Selection Area"
+                tabindex="0"></canvas>
+      <div class="preview-box" id="preview" role="img" aria-live="polite"></div>
     </section>
 
     <section class="color-display-section section-container">
@@ -27,17 +27,17 @@
 
      <div id="loading" class="loading-indicator" style="display:none;">Loading...</div>
 
-    <section class="selections section-container">
+    <section class="color-selections section-container">
         <h2 class="section-title">Color Selections</h2>
       <div class="selection active" id="selection-1">
         <label for="color1">Select Color 1:</label>
-        <input type="color" id="color1" value="#ff0000" title="Choose Color 1" aria-label="Color 1" />
+        <input type="color" id="color1" value="#ff0000" aria-label="Color 1" />
       </div>
       <div class="selection" id="selection-2">
         <label for="color2">Select Color 2:</label>
-        <input type="color" id="color2" value="#0000ff" title="Choose Color 2" aria-label="Color 2" />
+        <input type="color" id="color2" value="#0000ff" aria-label="Color 2" />
       </div>
-      <div class="selection" id="recent-colors">
+      <div class="recent-colors-section" id="recent-colors">
         <h3 class="sub-section-title">Recent Colors</h3>
         <div id="recent-colors-container" aria-label="Recent Colors"></div>
         <label for="maxRecentColors">Max Recent Colors:</label>
@@ -45,39 +45,51 @@
       </div>
     </section>
 
-      <section class="controls-section section-container">
+      <section class="color-adjustment-section section-container">
           <h2 class="section-title">Color Adjustment</h2>
-          <div class="adjustments-section">
-              <label for="brightness">Brightness:</label>
-              <input type="range" id="brightness" min="-100" max="100" value="0" title="Adjust Brightness"
-                    aria-label="Brightness" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
-              <label for="saturation">Saturation:</label>
-                <input type="range" id="saturation" min="-100" max="100" value="0" title="Adjust Saturation"
-                    aria-label="Saturation" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
-                <label for="hue">Hue:</label>
-                <input type="range" id="hue" min="0" max="359" value="0" title="Adjust Hue" aria-label="Hue" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0"/>
-            </div>
+          <div class="adjustments">
+              <div class="adjustment-row">
+                  <label for="brightness">Brightness:</label>
+                  <input type="range" id="brightness" min="-100" max="100" value="0"
+                         aria-label="Brightness" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
+              </div>
+              <div class="adjustment-row">
+                  <label for="saturation">Saturation:</label>
+                  <input type="range" id="saturation" min="-100" max="100" value="0"
+                         aria-label="Saturation" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
+              </div>
+              <div class="adjustment-row">
+                  <label for="hue">Hue:</label>
+                  <input type="range" id="hue" min="0" max="359" value="0" aria-label="Hue" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0"/>
+              </div>
+          </div>
       </section>
 
       <section class="opacity-section section-container">
           <h2 class="section-title">Opacity</h2>
-            <label for="opacity">Opacity:</label>
-            <input type="range" id="opacity" min="0" max="1" step="0.01" value="1" title="Adjust Opacity"
-                aria-label="Opacity" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1"/>
+            <div class="control-row">
+                <label for="opacity">Opacity:</label>
+                <input type="range" id="opacity" min="0" max="1" step="0.01" value="1"
+                       aria-label="Opacity" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1"/>
+            </div>
       </section>
 
           <section class="gradient-section section-container">
               <h2 class="section-title">Gradient</h2>
               <div class="gradient-controls">
-                <label for="gradient-type">Select Gradient Type:</label>
-                <select id="gradient-type" title="Choose Gradient Type" aria-label="Gradient Type">
-                      <option value="linear">Linear</option>
-                      <option value="radial">Radial</option>
-                      <option value="conic">Conic</option>
-                  </select>
-                <label for="gradient-direction">Gradient Direction:</label>
-                  <input type="text" id="gradient-direction" value="to right" title="Enter Gradient Direction"
-                      aria-label="Gradient Direction" />
+                <div class="control-row">
+                    <label for="gradient-type">Select Gradient Type:</label>
+                    <select id="gradient-type" aria-label="Gradient Type">
+                        <option value="linear">Linear</option>
+                        <option value="radial">Radial</option>
+                        <option value="conic">Conic</option>
+                    </select>
+                </div>
+                <div class="control-row">
+                    <label for="gradient-direction">Gradient Direction:</label>
+                    <input type="text" id="gradient-direction" value="to right"
+                           aria-label="Gradient Direction" />
+                </div>
               </div>
             </section>
 
@@ -89,9 +101,11 @@
 
         <section class="accessibility-section section-container">
             <h2 class="section-title">Color Accessibility Checker</h2>
-            <div>
-                <label for="contrast-bg">Background Color:</label>
-                <input type="color" id="contrast-bg" value="#ffffff">
+            <div class="controls">
+                <div class="control-row">
+                    <label for="contrast-bg">Background Color:</label>
+                    <input type="color" id="contrast-bg" value="#ffffff">
+                </div>
                 <button id="check-contrast" class="button">Check Contrast</button>
                 <p id="contrast-result"></p>
                 <p id="accessibility-level"></p>
@@ -106,7 +120,7 @@
 
         <section class="customizable-preview-section section-container">
             <h2 class="section-title">Customizable Preview</h2>
-            <div id="custom-preview-box" class="preview-box"></div>
+            <div id="custom-preview-box" class="preview-box" aria-live="polite"></div>
         </section>
 
         <section class="formats-section section-container">
@@ -120,7 +134,7 @@
             <button id="save-palette" class="button">Save Palette</button>
         </section>
 
-        <section class="ai-suggestions-panel section-container" id="ai-suggestions-panel">
+        <section class="ai-suggestions-panel section-container" id="ai-suggestions-panel" aria-hidden="true">
             <h2 class="section-title">AI Color Suggestions</h2>
             <div id="ai-suggestions-list"></div>
             <button id="generate-ai-suggestions" class="button">Generate AI Suggestions</button>
