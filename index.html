@@ -3,71 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Color Picker</title>
+    <title>Futuristic Color Picker</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="color-picker">
-        <h2>Ultimate Color Picker</h2>
-        
-        <label for="color-input-1">Color 1:</label>
-        <input type="color" id="color-input-1" value="#ff0000">
-        <label for="color-input-2">Color 2:</label>
-        <input type="color" id="color-input-2" value="#0000ff">
-        
-        <br>
-        <label for="opacity">Opacity:</label>
-        <input type="range" id="opacity" min="0" max="1" step="0.01" value="1"><br>
-        
-        <h3>Color Adjustment</h3>
-        <label for="brightness">Brightness:</label>
-        <input type="range" id="brightness" min="-100" max="100" value="0"><br>
-        <label for="saturation">Saturation:</label>
-        <input type="range" id="saturation" min="-100" max="100" value="0"><br>
-        <label for="hue">Hue:</label>
-        <input type="range" id="hue" min="-180" max="180" value="0"><br>
+<body class="light-mode">
+  <main class="color-picker">
+    <h1 class="color-picker-title">Futuristic Color Picker</h1>
 
-        <h3>Gradient Type</h3>
-        <select id="gradient-type">
-            <option value="linear">Linear</option>
-            <option value="radial">Radial</option>
-            <option value="conic">Conic</option>
-        </select>
-        
-        <h3>Color Harmonies</h3>
-        <button id="generate-harmonies">Generate Color Harmonies</button>
-        <div id="color-harmonies"></div>
+    <section class="main-section">
+      <canvas id="color-wheel" class="color-wheel" role="color-picker" aria-labelledby="color-picker-title"
+                tabindex="0" aria-label="Color Wheel"></canvas>
+      <div class="preview-box" id="preview" role="img" aria-label="Color Preview" aria-live="polite"></div>
+    </section>
 
-        <h3>Color Accessibility Checker</h3>
-        <div>
-            <label for="contrast-bg">Background Color:</label>
-            <input type="color" id="contrast-bg" value="#ffffff">
-            <button id="check-contrast">Check Contrast</button>
-            <p id="contrast-result"></p>
-            <p id="accessibility-level"></p>
+    <section class="color-display-section section-container">
+        <h2 class="section-title">Selected Color</h2>
+        <div id="color-display">
+            <p>HSL: <span id="hsl-value"></span></p>
+            <p>Hex: <span id="hex-value"></span></p>
+            <p>RGB: <span id="rgb-value"></span></p>
         </div>
+    </section>
 
-        <h3>Palette Generators</h3>
-        <button id="generate-palette">Generate Analogous Palette</button>
-        <div id="generated-palette"></div>
+     <div id="loading" class="loading-indicator" style="display:none;">Loading...</div>
 
-        <h3>Customizable Preview</h3>
-        <div id="preview-box" class="preview-box"></div>
+    <section class="selections section-container">
+        <h2 class="section-title">Color Selections</h2>
+      <div class="selection active" id="selection-1">
+        <label for="color1">Select Color 1:</label>
+        <input type="color" id="color1" value="#ff0000" title="Choose Color 1" aria-label="Color 1" />
+      </div>
+      <div class="selection" id="selection-2">
+        <label for="color2">Select Color 2:</label>
+        <input type="color" id="color2" value="#0000ff" title="Choose Color 2" aria-label="Color 2" />
+      </div>
+      <div class="selection" id="recent-colors">
+        <h3 class="sub-section-title">Recent Colors</h3>
+        <div id="recent-colors-container" aria-label="Recent Colors"></div>
+        <label for="maxRecentColors">Max Recent Colors:</label>
+        <input type="number" id="maxRecentColors" value="5" min="1" max="20" aria-label="Maximum Recent Colors"/>
+      </div>
+    </section>
 
-        <h3>Dynamic Color Formats</h3>
-        <div id="color-formats"></div>
+      <section class="controls-section section-container">
+          <h2 class="section-title">Color Adjustment</h2>
+          <div class="adjustments-section">
+              <label for="brightness">Brightness:</label>
+              <input type="range" id="brightness" min="-100" max="100" value="0" title="Adjust Brightness"
+                    aria-label="Brightness" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
+              <label for="saturation">Saturation:</label>
+                <input type="range" id="saturation" min="-100" max="100" value="0" title="Adjust Saturation"
+                    aria-label="Saturation" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
+                <label for="hue">Hue:</label>
+                <input type="range" id="hue" min="0" max="359" value="0" title="Adjust Hue" aria-label="Hue" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0"/>
+            </div>
+      </section>
 
-        <h3>User Saved Palettes</h3>
-        <div id="saved-palettes"></div>
-        <button id="save-palette">Save Palette</button>
-        
-        <div class="actions">
-            <button id="export-json">Export JSON</button>
-            <button id="export-scss">Export SCSS</button>
-            <button id="copy-colors">Copy Colors</button>
-            <button id="toggle-theme">Toggle Dark/Light Mode</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+      <section class="opacity-section section-container">
+          <h2 class="section-title">Opacity</h2>
+            <label for="opacity">Opacity:</label>
+            <input type="range" id="opacity" min="0" max="1" step="0.01" value="1" title="Adjust Opacity"
+                aria-label="Opacity" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1"/>
+      </section>
+
+          <section class="gradient-section section-container">
+              <h2 class="section-title">Gradient</h2>
+              <div class="gradient-controls">
+                <label for="gradient-type">Select Gradient Type:</label>
+                <select id="gradient-type" title="Choose Gradient Type" aria-label="Gradient Type">
+                      <option value="linear">Linear</option>
+                      <option value="radial">Radial</option>
+                      <option value="conic">Conic</option>
+                  </select>
+                <label for="gradient-direction">Gradient Direction:</label>
+                  <input type="text" id="gradient-direction" value="to right" title="Enter Gradient Direction"
+                      aria-label="Gradient Direction" />
+              </div>
+            </section>
+
+        <section class="harmonies-section section-container">
+            <h2 class="section-title">Color Harmonies</h2>
+            <button id="generate-harmonies" class="button">Generate Color Harmonies</button>
+            <div id="color-harmonies"></div>
+        </section>
+
+        <section class="accessibility-section section-container">
+            <h2 class="section-title">Color Accessibility Checker</h2>
+            <div>
+                <label for="contrast-bg">Background Color:</label>
+                <input type="color" id="contrast-bg" value="#ffffff">
+                <button id="check-contrast" class="button">Check Contrast</button>
+                <p id="contrast-result"></p>
+                <p id="accessibility-level"></p>
+            </div>
+        </section>
+
+        <section class="palette-section section-container">
+            <h2 class="section-title">Palette Generators</h2>
+            <button id="generate-palette" class="button">Generate Analogous Palette</button>
+            <div id="generated-palette"></div>
+        </section>
+
+        <section class="customizable-preview-section section-container">
+            <h2 class="section-title">Customizable Preview</h2>
+            <div id="custom-preview-box" class="preview-box"></div>
+        </section>
+
+        <section class="formats-section section-container">
+            <h2 class="section-title">Dynamic Color Formats</h2>
+            <div id="color-formats"></div>
+        </section>
+
+        <section class="saved-palettes-section section-container">
+            <h2 class="section-title">User Saved Palettes</h2>
+            <div id="saved-palettes"></div>
+            <button id="save-palette" class="button">Save Palette</button>
+        </section>
+
+        <section class="ai-suggestions-panel section-container" id="ai-suggestions-panel">
+            <h2 class="section-title">AI Color Suggestions</h2>
+            <div id="ai-suggestions-list"></div>
+            <button id="generate-ai-suggestions" class="button">Generate AI Suggestions</button>
+        </section>
+
+        <section class="export-section section-container">
+            <h2 class="section-title">Export & Share</h2>
+            <button id="export-json" class="button">Export as JSON</button>
+            <button id="export-scss" class="button">Export as SCSS</button>
+            <button id="copy-colors" class="button">Copy Colors</button>
+        </section>
+
+        <section class="theme-controls-section section-container">
+            <h2 class="section-title">Theme Controls</h2>
+            <button id="toggle-theme" class="button" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+        </section>
+
+  </main>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

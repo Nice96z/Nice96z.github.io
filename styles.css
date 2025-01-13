@@ -1,51 +1,263 @@
 /* styles.css */
+/* CSS Reset - Basic */
+body, h1, h2, h3, p, ul, li, figure, figcaption, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
+}
+
+/* CSS Variables */
+:root {
+    --bg-color-light: #f4f4f4;
+    --bg-color-dark: #1a1a1a;
+    --text-color-light: #333;
+    --text-color-dark: #eee;
+    --accent-color: #007bff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    --button-bg-light: #eee;
+    --button-bg-dark: #333;
+    --button-hover-bg-light: #ddd;
+    --button-hover-bg-dark: #444;
+    --thumb-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    --active-border-color: #00ff00;
+}
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    transition: background-color 0.3s;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-color-light);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.light-mode {
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
 }
 
 .dark-mode {
-    background-color: #1c1c1c;
-    color: white;
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
 }
 
 .color-picker {
-    text-align: center;
-    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
+}
+
+/* Common Section Title Style */
+.section-title {
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.sub-section-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Common Section Container Style */
+.section-container {
+    margin-bottom: 20px;
+    padding: 15px;
     border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
+    border-radius: 8px;
 }
 
-.color-picker.dark-mode {
-    background-color: #333;
-    border-color: #555;
+/* Main Section */
+.main-section {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.preview-box {
+/* Color Wheel */
+.color-wheel {
     width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: var(--shadow-color);
+}
+
+/* Preview Box */
+.preview-box {
+    width: 100px;
     height: 100px;
-    margin: 20px auto;
     border: 1px solid #ccc;
+    box-shadow: var(--shadow-color);
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Selections */
+.selections {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.selection {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.selection.active {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
 }
 
 .color-swatch {
     width: 30px;
     height: 30px;
-    display: inline-block;
-    margin: 5px;
+    border-radius: 50%;
     cursor: pointer;
+    margin-right: 5px;
+    border: 1px solid #eee;
+}
+
+#recent-colors-container {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+/* Controls Section */
+.adjustments-section,
+.gradient-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.adjustment-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Input Slider General Style */
+input[type="range"] {
+    flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: #ddd;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+}
+
+/* Focus States */
+button:focus,
+input:focus,
+.color-wheel:focus,
+select:focus,
+.selection:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Select Dropdown */
+select {
+    padding: 8px;
+    border-radius: 4px;
     border: 1px solid #ccc;
 }
 
-.actions {
+/* Buttons */
+.button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: var(--button-bg-light);
+    color: var(--text-color-light);
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode .button {
+    background-color: var(--button-bg-dark);
+    color: var(--text-color-dark);
+}
+
+.button:hover {
+    background-color: var(--button-hover-bg-light);
+}
+
+.dark-mode .button:hover {
+    background-color: var(--button-hover-bg-dark);
+}
+
+/* AI Suggestions Panel */
+.ai-suggestions-panel {
+    display: none;
     margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
+}
+
+.dark-mode .ai-suggestions-panel {
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
+    border-color: #555;
+}
+
+.ai-suggestions-list p {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+/* Color Display Section */
+.color-display-section {
+    margin-top: 20px;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background-color: var(--glass-bg);
+    box-shadow: var(--glass-shadow);
+}
+
+.color-display-section p {
+    margin: 5px 0;
+}
+
+#color-display span {
+    font-weight: bold;
+    color: var(--accent-color); /* Or any color you prefer */
 }
