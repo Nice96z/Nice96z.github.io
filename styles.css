@@ -22,6 +22,10 @@ body, h1, h2, h3, p, ul, li, figure, figcaption, blockquote, dl, dd {
     --button-hover-bg-dark: #444;
     --thumb-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     --active-border-color: #00ff00;
+    --border-radius: 8px;
+    --section-padding: 15px;
+    --control-gap: 10px;
+    --color-wheel-size: 200px; /* Added CSS variable for color wheel size */
 }
 
 body {
@@ -50,25 +54,44 @@ body {
     padding: 20px;
 }
 
-/* Common Section Title Style */
+/* Common Styles */
 .section-title {
-    margin-bottom: 10px;
+    margin-bottom: var(--control-gap);
     font-size: 20px;
     text-align: center;
 }
 
 .sub-section-title {
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: var(--control-gap);
     font-size: 16px;
 }
 
-/* Common Section Container Style */
 .section-container {
     margin-bottom: 20px;
-    padding: 15px;
+    padding: var(--section-padding);
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
+}
+
+.control-row {
+    margin-bottom: var(--control-gap);
+    display: flex;
+    align-items: center;
+    gap: var(--control-gap);
+}
+
+/* Utility Classes */
+.shadow-md {
+    box-shadow: var(--shadow-color);
+}
+
+.rounded-md {
+    border-radius: var(--border-radius);
+}
+
+.hidden {
+    display: none !important; /* Use !important to ensure it overrides other display properties */
 }
 
 /* Main Section */
@@ -80,11 +103,16 @@ body {
 
 /* Color Wheel */
 .color-wheel {
-    width: 200px;
-    height: 200px;
+    width: var(--color-wheel-size); /* Use CSS variable */
+    height: var(--color-wheel-size); /* Use CSS variable */
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: var(--shadow-color);
+    box-shadow: var(--shadow-color); /* Using CSS variable directly here is also fine */
+    outline: none; /* Remove default focus outline */
+}
+
+.color-wheel:focus {
+    outline: 2px solid var(--accent-color);
 }
 
 /* Preview Box */
@@ -92,20 +120,20 @@ body {
     width: 100px;
     height: 100px;
     border: 1px solid #ccc;
-    box-shadow: var(--shadow-color);
+    @apply shadow-md; /* Using utility class */
 }
 
 /* Loading Indicator */
 .loading-indicator {
-    margin-top: 10px;
+    margin-top: var(--control-gap);
     font-size: 14px;
     text-align: center;
 }
 
-/* Selections */
-.selections {
+/* Color Selections */
+.color-selections {
     display: flex;
-    gap: 10px;
+    gap: var(--control-gap);
     margin-bottom: 20px;
 }
 
@@ -136,18 +164,12 @@ body {
     margin-top: 5px;
 }
 
-/* Controls Section */
-.adjustments-section,
-.gradient-controls {
+/* Color Adjustment Section */
+.color-adjustment-section .adjustments,
+.gradient-section .gradient-controls {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.adjustment-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    gap: var(--control-gap);
 }
 
 /* Input Slider General Style */
@@ -161,6 +183,7 @@ input[type="range"] {
     outline: none;
     -webkit-transition: .2s;
     transition: opacity .2s;
+    margin: 0; /* Reset default margin */
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -184,7 +207,6 @@ input[type="range"]::-moz-range-thumb {
 /* Focus States */
 button:focus,
 input:focus,
-.color-wheel:focus,
 select:focus,
 .selection:focus {
     outline: 2px solid var(--accent-color);
@@ -196,6 +218,13 @@ select {
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
+    background-color: white; /* Ensure background for contrast */
+    color: var(--text-color-light);
+}
+
+.dark-mode select {
+    background-color: #444;
+    color: var(--text-color-dark);
 }
 
 /* Buttons */
@@ -224,11 +253,11 @@ select {
 
 /* AI Suggestions Panel */
 .ai-suggestions-panel {
-    display: none;
-    margin-top: 10px;
-    padding: 10px;
+    display: none; /* Default to hidden, JavaScript will control */
+    margin-top: var(--control-gap);
+    padding: var(--section-padding);
     border: 1px solid #ccc;
-    border-radius: 4px;
+    @apply rounded-md; /* Using utility class */
     background-color: var(--bg-color-light);
     color: var(--text-color-light);
 }
@@ -248,7 +277,7 @@ select {
 .color-display-section {
     margin-top: 20px;
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    @apply rounded-md; /* Using utility class */
     background-color: var(--glass-bg);
     box-shadow: var(--glass-shadow);
 }
@@ -259,5 +288,5 @@ select {
 
 #color-display span {
     font-weight: bold;
-    color: var(--accent-color); /* Or any color you prefer */
-}
+    color: var(--accent-color);
+    }
