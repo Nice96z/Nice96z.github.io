@@ -1,64 +1,62 @@
-import { generateColormindSuggestions } from './api.js'; // Assuming you'll implement this
-// import { generateAdobeColorSuggestions, generateColorThiefSuggestions } from './api.js'; // If you add these back
+import { generateColormindSuggestions } from './api.js';
 
 // --- Constants ---
 const THROTTLE_DELAY = 50;
 const DEFAULT_MAX_RECENT_COLORS = 5;
-const INDICATOR_RADIUS = 8; // Radius for the color wheel selection indicator
+const INDICATOR_RADIUS = 8;
 
-// --- DOM Elements ---
-const colorWheel = document.getElementById('color-wheel');
-const colorInput1 = document.getElementById('color1');
-const colorInput2 = document.getElementById('color2');
-const previewBox = document.getElementById('preview');
-const recentColorsContainer = document.getElementById('recent-colors-container');
-const gradientTypeSelect = document.getElementById('gradient-type');
-const gradientDirectionInput = document.getElementById('gradient-direction');
-const brightnessInput = document.getElementById('brightness');
-const saturationInput = document.getElementById('saturation');
-const hueInput = document.getElementById('hue');
-const opacityInput = document.getElementById('opacity');
-const toggleThemeButton = document.getElementById('toggle-theme');
-const exportJsonButton = document.getElementById('export-json');
-const exportScssButton = document.getElementById('export-scss');
-const copyColorsButton = document.getElementById('copy-colors');
-const generateAiSuggestionsButton = document.getElementById('generate-ai-suggestions');
-const aiSuggestionsPanel = document.getElementById('ai-suggestions-panel');
-const aiSuggestionsList = document.getElementById('ai-suggestions-list');
-const selection1 = document.getElementById('selection-1');
-const selection2 = document.getElementById('selection-2');
-const maxRecentColorsInput = document.getElementById('maxRecentColors');
-const loadingIndicator = document.getElementById('loading');
-const hslValueDisplay = document.getElementById('hsl-value');
-const hexValueDisplay = document.getElementById('hex-value');
-const rgbValueDisplay = document.getElementById('rgb-value');
-const customPreviewBox = document.getElementById('custom-preview-box');
+// --- DOM Element Selectors ---
+const el = {
+    colorWheel: document.getElementById('color-wheel'),
+    colorInput1: document.getElementById('color1'),
+    colorInput2: document.getElementById('color2'),
+    previewBox: document.getElementById('preview'),
+    recentColorsContainer: document.getElementById('recent-colors-container'),
+    gradientTypeSelect: document.getElementById('gradient-type'),
+    gradientDirectionSelect: document.getElementById('gradient-direction-select'), // Corrected ID
+    brightnessInput: document.getElementById('brightness'),
+    saturationInput: document.getElementById('saturation'),
+    hueInput: document.getElementById('hue'),
+    opacityInput: document.getElementById('opacity'),
+    toggleThemeButton: document.getElementById('toggle-theme'),
+    exportJsonButton: document.getElementById('export-json'),
+    exportScssButton: document.getElementById('export-scss'),
+    copyColorsButton: document.getElementById('copy-colors'),
+    generateAiSuggestionsButton: document.getElementById('generate-ai-suggestions'),
+    aiSuggestionsPanel: document.getElementById('ai-suggestions-panel'),
+    aiSuggestionsList: document.getElementById('ai-suggestions-list'),
+    selection1: document.getElementById('selection-1'),
+    selection2: document.getElementById('selection-2'),
+    maxRecentColorsInput: document.getElementById('maxRecentColors'),
+    loadingIndicator: document.getElementById('loading'),
+    hslValueDisplay: document.getElementById('hsl-value'),
+    hexValueDisplay: document.getElementById('hex-value'),
+    rgbValueDisplay: document.getElementById('rgb-value'),
+    customPreviewBox: document.getElementById('custom-preview-box'),
+    aiSuggestionTemplate: document.getElementById('ai-suggestion-item'), // Assuming you added this template
+};
 
 // --- State Variables ---
 let isDragging = false;
 let recentColors = [];
 let maxRecentColors = DEFAULT_MAX_RECENT_COLORS;
 let currentHue = 0;
-let currentSaturation = 0.5; // Initialize saturation in 0-1 range
-let currentBrightness = 0.5; // Initialize brightness in 0-1 range
+let currentSaturation = 0.5;
+let currentBrightness = 0.5;
 let colorWheelCache = null;
-let activeSelection = selection1;
+let activeSelection = el.selection1;
 
 // --- Utility Functions ---
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-const rgbToHex = (rgb) => `#${Math.round(clamp(rgb.r, 0, 255)).toString(16).padStart(2, '0')}${Math.round(clamp(rgb.g, 0, 255)).toString(16).padStart(2, '0')}${Math.round(clamp(rgb.b, 0, 255)).toString(16).padStart(2, '0')}`;
+const rgbToHex = ({ r, g, b }) => `#${Math.round(clamp(r, 0, 255)).toString(16).padStart(2, '0')}${Math.round(clamp(g, 0, 255)).toString(16).padStart(2, '0')}${Math.round(clamp(b, 0, 255)).toString(16).padStart(2, '0')}`;
 const hexToRgb = (hex) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
+    return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
 };
-const hslToRgb = (hsl) => {
-    const h = hsl.h / 360;
-    const s = clamp(hsl.s, 0, 1);
-    const l = clamp(hsl.l, 0, 1);
+const hslToRgb = ({ h, s, l }) => {
+    h /= 360;
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
     const hue2rgb = (p, q, t) => {
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
@@ -67,67 +65,42 @@ const hslToRgb = (hsl) => {
         if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
         return p;
     };
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
     const r = hue2rgb(p, q, h + 1 / 3);
     const g = hue2rgb(p, q, h);
     const b = hue2rgb(p, q, h - 1 / 3);
     return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
 };
-
-const rgbToHsl = (rgb) => {
-    const r = clamp(rgb.r / 255, 0, 1);
-    const g = clamp(rgb.g / 255, 0, 1);
-    const b = clamp(rgb.b / 255, 0, 1);
+const rgbToHsl = ({ r, g, b }) => {
+    r /= 255; g /= 255; b /= 255;
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
     let h, s, l = (max + min) / 2;
-    if (max === min) {
-        h = s = 0; // achromatic
-    } else {
+    if (max === min) { h = s = 0; } else {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
-            case r: h = ((g - b) / d + (g < b ? 6 : 0)) * 60; break;
-            case g: h = ((b - r) / d + 2) * 60; break;
-            case b: h = ((r - g) / d + 4) * 60; break;
+            case r: h = ((g - b) / d + (g < b ? 6 : 0)); break;
+            case g: h = ((b - r) / d + 2); break;
+            case b: h = ((r - g) / d + 4); break;
         }
+        h *= 60;
     }
     return { h: Math.round(h), s, l };
 };
-
 const isValidColor = (color) => /^#([0-9A-Fa-f]{3}){1,2}$/.test(color);
-const throttle = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-        if (!timeoutId) {
-            timeoutId = setTimeout(() => {
-                func.apply(this, args);
-                timeoutId = null;
-            }, delay);
-        }
-    };
-};
-
-const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => { func.apply(this, args); }, delay);
-    };
-};
-
+const throttle = (func, delay) => { let timeoutId; return (...args) => { if (!timeoutId) { timeoutId = setTimeout(() => { func.apply(this, args); timeoutId = null; }, delay); } }; };
+const debounce = (func, delay) => { let timeoutId; return (...args) => { clearTimeout(timeoutId); timeoutId = setTimeout(() => { func.apply(this, args); }, delay); }; };
 const hexToRgba = (hex, opacity) => {
     const rgb = hexToRgb(hex);
     return rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${clamp(opacity, 0, 1)})` : null;
 };
 
 // --- Color Wheel Functionality ---
-const ctx = colorWheel.getContext('2d');
-let wheelSize = colorWheel.offsetWidth; // Get size from CSS
+const ctx = el.colorWheel.getContext('2d');
+let wheelSize = el.colorWheel.offsetWidth;
 
 function drawColorWheel() {
-    wheelSize = colorWheel.offsetWidth; // Update size in case of resizing
+    wheelSize = el.colorWheel.offsetWidth;
     const centerX = wheelSize / 2;
     const centerY = wheelSize / 2;
     const radius = wheelSize / 2;
@@ -147,7 +120,7 @@ function drawColorWheel() {
                     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
                     const hue = (angle + 360) % 360;
                     const saturation = distance / radius;
-                    const rgb = hslToRgb({ h: hue, s: saturation, l: 0.5 }); // Fixed brightness for wheel
+                    const rgb = hslToRgb({ h: hue, s: saturation, l: 0.5 });
                     ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
                     ctx.fillRect(x, y, 1, 1);
                 }
@@ -159,7 +132,7 @@ function drawColorWheel() {
 }
 
 function drawSelectionIndicator() {
-    const wheelSize = colorWheel.offsetWidth;
+    const { offsetWidth: wheelSize } = el.colorWheel;
     const centerX = wheelSize / 2;
     const centerY = wheelSize / 2;
     const radius = wheelSize / 2;
@@ -171,21 +144,15 @@ function drawSelectionIndicator() {
 
     ctx.beginPath();
     ctx.arc(indicatorX, indicatorY, INDICATOR_RADIUS, 0, 2 * Math.PI);
-
-    if (document.body.classList.contains('dark-mode')) {
-        ctx.fillStyle = 'white';
-        ctx.strokeStyle = 'black';
-    } else {
-        ctx.fillStyle = 'black';
-        ctx.strokeStyle = 'white';
-    }
+    ctx.fillStyle = document.body.classList.contains('dark-mode') ? 'white' : 'black';
+    ctx.strokeStyle = document.body.classList.contains('dark-mode') ? 'black' : 'white';
     ctx.fill();
     ctx.stroke();
 }
 
 const rotateColorWheel = throttle((event) => {
     if (!isDragging) return;
-    const bounds = colorWheel.getBoundingClientRect();
+    const bounds = el.colorWheel.getBoundingClientRect();
     const clientX = event.clientX !== undefined ? event.clientX : event.touches[0].clientX;
     const clientY = event.clientY !== undefined ? event.clientY : event.touches[0].clientY;
     const x = clientX - bounds.left - (wheelSize / 2);
@@ -193,8 +160,7 @@ const rotateColorWheel = throttle((event) => {
 
     let angle = Math.atan2(y, x) * (180 / Math.PI) + 90;
     currentHue = (angle + 360) % 360;
-    const distance = Math.sqrt(x * x + y * y);
-    currentSaturation = clamp(distance / (wheelSize / 2), 0, 1);
+    currentSaturation = clamp(Math.sqrt(x * x + y * y) / (wheelSize / 2), 0, 1);
 
     drawColorWheel();
     updateColorFromWheel();
@@ -202,27 +168,25 @@ const rotateColorWheel = throttle((event) => {
 
 // --- Preview Functionality ---
 function updatePreview(color) {
-    previewBox.style.backgroundColor = hexToRgba(color, opacityInput.value);
-    previewBox.setAttribute('aria-label', `Color Preview: ${color}`);
+    el.previewBox.style.backgroundColor = hexToRgba(color, el.opacityInput.value);
+    el.previewBox.setAttribute('aria-label', `Color Preview: ${color}`);
     updateGradientPreview();
     updateCustomPreview();
 }
 
 function updateCustomPreview() {
-    customPreviewBox.style.backgroundColor = hexToRgba(colorInput1.value, opacityInput.value);
-    // Add more custom styles based on other controls if needed
+    el.customPreviewBox.style.backgroundColor = hexToRgba(el.colorInput1.value, el.opacityInput.value);
 }
 
 function updateGradientPreview() {
-    const color1 = colorInput1.value;
-    const color2 = colorInput2.value;
-    const gradientType = gradientTypeSelect.value;
-    const gradientDirection = gradientDirectionInput.value;
-    const opacity1 = parseFloat(opacityInput.value);
-    const opacity2 = parseFloat(opacityInput.value); // Assuming same opacity for both stops for now
+    const color1 = el.colorInput1.value;
+    const color2 = el.colorInput2.value;
+    const gradientType = el.gradientTypeSelect.value;
+    const gradientDirection = el.gradientDirectionSelect.value;
+    const opacity = parseFloat(el.opacityInput.value);
 
-    const rgba1 = hexToRgba(color1, opacity1);
-    const rgba2 = hexToRgba(color2, opacity2);
+    const rgba1 = hexToRgba(color1, opacity);
+    const rgba2 = hexToRgba(color2, opacity);
 
     let gradientString;
     if (gradientType === 'linear') {
@@ -232,30 +196,28 @@ function updateGradientPreview() {
     } else if (gradientType === 'conic') {
         gradientString = `conic-gradient(${rgba1}, ${rgba2})`;
     }
-    previewBox.style.background = gradientString;
+    el.previewBox.style.background = gradientString;
 }
 
-function updateColorDisplay(rgb) {
-    const hex = rgbToHex(rgb);
-    const hsl = rgbToHsl(rgb);
-    hslValueDisplay.textContent = `(${hsl.h.toFixed(0)}, ${(hsl.s * 100).toFixed(0)}%, ${(hsl.l * 100).toFixed(0)}%)`;
-    hexValueDisplay.textContent = hex;
-    rgbValueDisplay.textContent = `(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+function updateColorDisplay({ r, g, b }) {
+    const hex = rgbToHex({ r, g, b });
+    const hsl = rgbToHsl({ r, g, b });
+    el.hslValueDisplay.textContent = `(${hsl.h.toFixed(0)}, ${(hsl.s * 100).toFixed(0)}%, ${(hsl.l * 100).toFixed(0)}%)`;
+    el.hexValueDisplay.textContent = hex;
+    el.rgbValueDisplay.textContent = `(${r}, ${g}, ${b})`;
 }
 
 // --- Recent Colors Functionality ---
 function updateRecentColorsDisplay() {
-    recentColorsContainer.innerHTML = '';
+    el.recentColorsContainer.innerHTML = '';
     recentColors.forEach(color => {
         const swatch = document.createElement('div');
         swatch.classList.add('color-swatch');
         swatch.style.backgroundColor = color;
         swatch.setAttribute('tabindex', '0');
         swatch.setAttribute('aria-label', `Recent color: ${color}`);
-        swatch.addEventListener('click', () => {
-            setActiveColor(color);
-        });
-        recentColorsContainer.appendChild(swatch);
+        swatch.addEventListener('click', () => setActiveColor(color));
+        el.recentColorsContainer.appendChild(swatch);
     });
 }
 
@@ -278,23 +240,22 @@ function handleColorInputChange(event) {
         const rgbColor = hexToRgb(color);
         if (rgbColor) {
             updateColorDisplay(rgbColor);
+            const hsl = rgbToHsl(rgbColor);
+            currentHue = hsl.h;
+            currentSaturation = hsl.s;
+            drawColorWheel();
         }
-        if (event.target === colorInput2) {
+        if (event.target === el.colorInput2) {
             updateGradientPreview();
         }
-        // Update color wheel to reflect the manually entered color
-        const hsl = rgbToHsl(rgbColor);
-        currentHue = hsl.h;
-        currentSaturation = hsl.s;
-        drawColorWheel();
     }
 }
 
 function setActiveColor(color) {
-    if (activeSelection === selection1) {
-        colorInput1.value = color;
+    if (activeSelection === el.selection1) {
+        el.colorInput1.value = color;
     } else {
-        colorInput2.value = color;
+        el.colorInput2.value = color;
     }
     updatePreview(color);
 }
@@ -311,40 +272,46 @@ function updateColorFromWheel() {
 function applyColorAdjustments() {
     const currentHexColor = getActiveColor();
     const currentRgb = hexToRgb(currentHexColor);
+    if (!currentRgb) return; // Exit if color is invalid
+
     let hsl = rgbToHsl(currentRgb);
 
-    hsl.l = clamp(parseFloat(brightnessInput.value) / 100 + 0.5, 0, 1);
-    hsl.s = clamp(parseFloat(saturationInput.value) / 100 + 0.5, 0, 1);
-    hsl.h = parseInt(hueInput.value, 10);
+    hsl.l = clamp(parseFloat(el.brightnessInput.value) / 100 + 0.5, 0, 1);
+    hsl.s = clamp(parseFloat(el.saturationInput.value) / 100 + 0.5, 0, 1);
+    hsl.h = parseInt(el.hueInput.value, 10);
 
     const rgb = hslToRgb(hsl);
     const hexColor = rgbToHex(rgb);
     setActiveColor(hexColor);
     updatePreview(hexColor);
     updateColorDisplay(rgb);
-    drawColorWheel(); // Keep the wheel in sync, though the indicator might not perfectly match
+    drawColorWheel();
 }
 
 // --- AI Suggestions ---
 async function generateAiColorSuggestions() {
-    loadingIndicator.classList.remove('hidden');
-    aiSuggestionsPanel.setAttribute('aria-hidden', 'false');
+    el.loadingIndicator.classList.remove('hidden');
+    el.aiSuggestionsPanel.setAttribute('aria-hidden', 'false');
     try {
-        const colormindPalette = await generateColormindSuggestions(); // Ensure this function exists and works
+        const colormindPalette = await generateColormindSuggestions();
+        el.aiSuggestionsList.innerHTML = '';
 
-        let suggestionsHTML = '<h3>Colormind</h3>';
         if (colormindPalette && colormindPalette.length > 0) {
-            suggestionsHTML += colormindPalette.map(color => `
-                <div class="color-suggestion" style="background-color: ${color};" tabindex="0" aria-label="AI suggested color: ${color}"></div>`).join('');
+            colormindPalette.forEach(color => {
+                const suggestionElement = el.aiSuggestionTemplate.content.cloneNode(true).querySelector('.ai-suggestion');
+                suggestionElement.style.backgroundColor = color;
+                suggestionElement.setAttribute('aria-label', `AI suggested color: ${color}`);
+                suggestionElement.addEventListener('click', () => setActiveColor(color));
+                el.aiSuggestionsList.appendChild(suggestionElement);
+            });
         } else {
-            suggestionsHTML += '<p>No Colormind suggestions found.</p>';
+            el.aiSuggestionsList.innerHTML = '<p>No Colormind suggestions found.</p>';
         }
-        aiSuggestionsList.innerHTML = suggestionsHTML;
     } catch (error) {
         console.error("Error fetching AI suggestions:", error);
-        aiSuggestionsList.innerHTML = '<p>Failed to fetch AI color suggestions. Please check your network connection.</p>';
+        el.aiSuggestionsList.innerHTML = '<p>Failed to fetch AI color suggestions. Please check your network connection.</p>';
     } finally {
-        loadingIndicator.classList.add('hidden');
+        el.loadingIndicator.classList.add('hidden');
     }
 }
 
@@ -360,7 +327,7 @@ function downloadFile(content, fileName, contentType) {
 
 // --- Event Handlers ---
 const handleColorWheelClick = (event) => {
-    const bounds = colorWheel.getBoundingClientRect();
+    const bounds = el.colorWheel.getBoundingClientRect();
     const x = event.clientX - bounds.left - (wheelSize / 2);
     const y = event.clientY - bounds.top - (wheelSize / 2);
     const distance = Math.sqrt(x * x + y * y);
@@ -374,112 +341,104 @@ const handleColorWheelClick = (event) => {
     }
 };
 
-// --- Event Listeners ---
-colorWheel.addEventListener('mousedown', (e) => { isDragging = true; rotateColorWheel(e); colorWheel.focus(); });
-colorWheel.addEventListener('mousemove', rotateColorWheel);
-window.addEventListener('mouseup', () => { isDragging = false; });
-colorWheel.addEventListener('touchstart', (e) => { isDragging = true; rotateColorWheel(e); e.preventDefault(); colorWheel.focus(); });
-colorWheel.addEventListener('touchmove', (e) => { rotateColorWheel(e); e.preventDefault(); });
-colorWheel.addEventListener('touchend', () => { isDragging = false; });
-colorWheel.addEventListener('click', handleColorWheelClick);
-
-colorWheel.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') {
-        currentHue = (currentHue - 5 + 360) % 360;
-        drawColorWheel();
-        updateColorFromWheel();
-    } else if (event.key === 'ArrowRight') {
-        currentHue = (currentHue + 5) % 360;
-        drawColorWheel();
-        updateColorFromWheel();
-    } else if (event.key === 'ArrowUp') {
-        currentSaturation = Math.min(1, currentSaturation + 0.05);
-        drawColorWheel();
-        updateColorFromWheel();
-    } else if (event.key === 'ArrowDown') {
-        currentSaturation = Math.max(0, currentSaturation - 0.05);
-        drawColorWheel();
-        updateColorFromWheel();
+const handleColorWheelKeydown = (event) => {
+    switch (event.key) {
+        case 'ArrowLeft': currentHue = (currentHue - 5 + 360) % 360; break;
+        case 'ArrowRight': currentHue = (currentHue + 5) % 360; break;
+        case 'ArrowUp': currentSaturation = Math.min(1, currentSaturation + 0.05); break;
+        case 'ArrowDown': currentSaturation = Math.max(0, currentSaturation - 0.05); break;
+        default: return;
     }
-});
-colorWheel.addEventListener('blur', () => colorWheel.style.outline = '');
-colorWheel.addEventListener('focus', () => colorWheel.style.outline = '2px solid var(--accent-color)');
+    drawColorWheel();
+    updateColorFromWheel();
+};
 
-colorInput1.addEventListener('input', handleColorInputChange);
-colorInput2.addEventListener('input', handleColorInputChange);
+// --- Event Listeners ---
+el.colorWheel.addEventListener('mousedown', (e) => { isDragging = true; rotateColorWheel(e); el.colorWheel.focus(); });
+el.colorWheel.addEventListener('mousemove', rotateColorWheel);
+window.addEventListener('mouseup', () => { isDragging = false; });
+el.colorWheel.addEventListener('touchstart', (e) => { isDragging = true; rotateColorWheel(e); e.preventDefault(); el.colorWheel.focus(); });
+el.colorWheel.addEventListener('touchmove', (e) => { rotateColorWheel(e); e.preventDefault(); });
+el.colorWheel.addEventListener('touchend', () => { isDragging = false; });
+el.colorWheel.addEventListener('click', handleColorWheelClick);
+el.colorWheel.addEventListener('keydown', handleColorWheelKeydown);
+el.colorWheel.addEventListener('blur', () => el.colorWheel.style.outline = '');
+el.colorWheel.addEventListener('focus', () => el.colorWheel.style.outline = '2px solid var(--color-accent)'); // Use CSS variable
 
-gradientTypeSelect.addEventListener('change', updateGradientPreview);
-gradientDirectionInput.addEventListener('input', updateGradientPreview);
+el.colorInput1.addEventListener('input', handleColorInputChange);
+el.colorInput2.addEventListener('input', handleColorInputChange);
 
-opacityInput.addEventListener('input', (e) => {
+el.gradientTypeSelect.addEventListener('change', updateGradientPreview);
+el.gradientDirectionSelect.addEventListener('change', updateGradientPreview);
+
+el.opacityInput.addEventListener('input', (e) => {
     updatePreview(getActiveColor());
-    previewBox.setAttribute('aria-valuenow', e.target.value);
+    el.previewBox.setAttribute('aria-valuenow', e.target.value);
 });
 
-brightnessInput.addEventListener('input', () => {
-    brightnessInput.setAttribute('aria-valuenow', brightnessInput.value);
+el.brightnessInput.addEventListener('input', () => {
+    el.brightnessInput.setAttribute('aria-valuenow', el.brightnessInput.value);
     applyColorAdjustments();
 });
 
-saturationInput.addEventListener('input', () => {
-    saturationInput.setAttribute('aria-valuenow', saturationInput.value);
+el.saturationInput.addEventListener('input', () => {
+    el.saturationInput.setAttribute('aria-valuenow', el.saturationInput.value);
     applyColorAdjustments();
 });
 
-hueInput.addEventListener('input', () => {
-    hueInput.setAttribute('aria-valuenow', hueInput.value);
+el.hueInput.addEventListener('input', () => {
+    el.hueInput.setAttribute('aria-valuenow', el.hueInput.value);
     applyColorAdjustments();
 });
 
-maxRecentColorsInput.addEventListener('input', debounce(() => {
-    maxRecentColors = parseInt(maxRecentColorsInput.value) || DEFAULT_MAX_RECENT_COLORS;
-    // Ensure we don't exceed the new limit
+el.maxRecentColorsInput.addEventListener('input', debounce(() => {
+    maxRecentColors = parseInt(el.maxRecentColorsInput.value) || DEFAULT_MAX_RECENT_COLORS;
     recentColors = recentColors.slice(0, maxRecentColors);
     updateRecentColorsDisplay();
 }, 300));
 
-generateAiSuggestionsButton.addEventListener('click', generateAiColorSuggestions);
+el.generateAiSuggestionsButton.addEventListener('click', generateAiColorSuggestions);
 
-exportJsonButton.addEventListener('click', () => {
+el.exportJsonButton.addEventListener('click', () => {
     const colors = {
-        color1: colorInput1.value,
-        color2: colorInput2.value,
-        opacity: opacityInput.value,
-        brightness: brightnessInput.value,
-        saturation: saturationInput.value,
-        hue: hueInput.value,
-        gradientType: gradientTypeSelect.value,
-        gradientDirection: gradientDirectionInput.value,
+        color1: el.colorInput1.value,
+        color2: el.colorInput2.value,
+        opacity: el.opacityInput.value,
+        brightness: el.brightnessInput.value,
+        saturation: el.saturationInput.value,
+        hue: el.hueInput.value,
+        gradientType: el.gradientTypeSelect.value,
+        gradientDirection: el.gradientDirectionSelect.value,
         recentColors
     };
     downloadFile(JSON.stringify(colors, null, 2), 'colors.json', 'application/json');
 });
 
-exportScssButton.addEventListener('click', () => {
-    const scssString = `$color1: ${colorInput1.value};\n$color2: ${colorInput2.value};\n$opacity: ${opacityInput.value};\n$brightness: ${brightnessInput.value};\n$saturation: ${saturationInput.value};\n$hue: ${hueInput.value};\n$gradientType: ${gradientTypeSelect.value};\n$gradientDirection: ${gradientDirectionInput.value};`;
+el.exportScssButton.addEventListener('click', () => {
+    const scssString = `$color1: ${el.colorInput1.value};\n$color2: ${el.colorInput2.value};\n$opacity: ${el.opacityInput.value};\n$brightness: ${el.brightnessInput.value};\n$saturation: ${el.saturationInput.value};\n$hue: ${el.hueInput.value};\n$gradientType: ${el.gradientTypeSelect.value};\n$gradientDirection: ${el.gradientDirectionSelect.value};`;
     downloadFile(scssString, 'colors.scss', 'text/scss');
 });
 
-copyColorsButton.addEventListener('click', () => {
+el.copyColorsButton.addEventListener('click', () => {
     const colors = {
-        color1: colorInput1.value,
-        color2: colorInput2.value,
-        opacity: opacityInput.value,
-        brightness: brightnessInput.value,
-        saturation: saturationInput.value,
-        hue: hueInput.value,
-        gradientType: gradientTypeSelect.value,
-        gradientDirection: gradientDirectionInput.value
+        color1: el.colorInput1.value,
+        color2: el.colorInput2.value,
+        opacity: el.opacityInput.value,
+        brightness: el.brightnessInput.value,
+        saturation: el.saturationInput.value,
+        hue: el.hueInput.value,
+        gradientType: el.gradientTypeSelect.value,
+        gradientDirection: el.gradientDirectionSelect.value
     };
     navigator.clipboard.writeText(JSON.stringify(colors, null, 2))
         .then(() => alert('Colors copied to clipboard!'))
         .catch(err => console.error('Failed to copy: ', err));
 });
 
-toggleThemeButton.addEventListener('click', () => document.body.classList.toggle('dark-mode'));
+el.toggleThemeButton.addEventListener('click', () => document.body.classList.toggle('dark-mode'));
 
-selection1.addEventListener('click', () => setActiveSelection(selection1));
-selection2.addEventListener('click', () => setActiveSelection(selection2));
+el.selection1.addEventListener('click', () => setActiveSelection(el.selection1));
+el.selection2.addEventListener('click', () => setActiveSelection(el.selection2));
 
 // --- Helper Functions ---
 function setActiveSelection(selection) {
@@ -489,14 +448,15 @@ function setActiveSelection(selection) {
 }
 
 function getActiveColor() {
-    return activeSelection === selection1 ? colorInput1.value : colorInput2.value;
+    return activeSelection === el.selection1 ? el.colorInput1.value : el.colorInput2.value;
 }
 
+// --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
-    wheelSize = colorWheel.offsetWidth; // Get initial size
-    colorWheel.width = wheelSize;
-    colorWheel.height = wheelSize;
+    wheelSize = el.colorWheel.offsetWidth;
+    el.colorWheel.width = wheelSize;
+    el.colorWheel.height = wheelSize;
     drawColorWheel();
-    updatePreview(colorInput1.value);
-    updateRecentColorsDisplay(); // Initial display of recent colors
+    updatePreview(el.colorInput1.value);
+    updateRecentColorsDisplay();
 });
