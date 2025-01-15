@@ -1,52 +1,111 @@
-/* styles.css */
-/* CSS Reset - Basic */
-body, h1, h2, h3, p, ul, li, figure, figcaption, blockquote, dl, dd {
+/* ================================== */
+/* == CSS Reset ===================== */
+/* ================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body, h1, h2, h3, p, ul, ol, li, figure, figcaption, blockquote, dl, dd {
     margin: 0;
     padding: 0;
 }
 
-/* CSS Variables */
-:root {
-    --bg-color-light: #f4f4f4;
-    --bg-color-dark: #1a1a1a;
-    --text-color-light: #333;
-    --text-color-dark: #eee;
-    --accent-color: #007bff;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --glass-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    --button-bg-light: #eee;
-    --button-bg-dark: #333;
-    --button-hover-bg-light: #ddd;
-    --button-hover-bg-dark: #444;
-    --thumb-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    --active-border-color: #00ff00;
-    --border-radius: 8px;
-    --section-padding: 15px;
-    --control-gap: 10px;
-    --color-wheel-size: 200px; /* Added CSS variable for color wheel size */
+ul, ol {
+    list-style: none;
 }
 
 body {
-    height: 100vh;
-    font-family: 'Helvetica', Arial, Georgia, Tahoma, Roboto;
-    color: var(--text-color-light);
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+article > * + * {
+    margin-top: 1em;
+}
+
+a:not([class]) {
+    text-decoration-skip-ink: auto;
+}
+
+/* ================================== */
+/* == CSS Variables ================= */
+/* ================================== */
+:root {
+    --color-bg-light: #f4f4f4;
+    --color-bg-dark: #1a1a1a;
+    --color-text-light: #333;
+    --color-text-dark: #eee;
+    --color-accent: #007bff;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-glass-bg: rgba(255, 255, 255, 0.1);
+    --color-glass-border: rgba(255, 255, 255, 0.2);
+    --color-glass-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    --color-button-bg-light: #eee;
+    --color-button-bg-dark: #333;
+    --color-button-hover-bg-light: #ddd;
+    --color-button-hover-bg-dark: #444;
+    --color-thumb-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    --color-active-border: #00ff00;
+    --border-radius-md: 8px;
+    --spacing-md: 15px;
+    --spacing-sm: 10px;
+    --font-family-base: 'Helvetica', Arial, Georgia, Tahoma, Roboto, sans-serif;
+    --font-size-base: 16px;
+    --color-wheel-size: 200px;
+}
+
+/* ================================== */
+/* == Base Styles =================== */
+/* ================================== */
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    color: var(--color-text-light);
+    background-color: var(--color-bg-light);
     transition: background-color 0.3s ease, color 0.3s ease;
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
 }
 
-.light-mode {
-    background-color: var(--bg-color-light);
-    color: var(--text-color-light);
-}
-
+/* ================================== */
+/* == Theme Styles ================== */
+/* ================================== */
 .dark-mode {
-    background-color: var(--bg-color-dark);
-    color: var(--text-color-dark);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-dark);
 }
 
+.dark-mode select {
+    background-color: #444;
+    color: var(--color-text-dark);
+}
+
+.dark-mode .button {
+    background-color: var(--color-button-bg-dark);
+    color: var(--color-text-dark);
+}
+
+.dark-mode .button:hover {
+    background-color: var(--color-button-hover-bg-dark);
+}
+
+.dark-mode .color-wheel:focus {
+    outline-color: var(--color-active-border);
+}
+
+/* ================================== */
+/* == Layout Styles ================= */
+/* ================================== */
 .color-picker {
     display: flex;
     flex-direction: column;
@@ -54,65 +113,54 @@ body {
     padding: 20px;
 }
 
-/* Common Styles */
-.section-title {
-    margin-bottom: var(--control-gap);
-    font-size: 20px;
-    text-align: center;
-}
-
-.sub-section-title {
-    margin-top: 0;
-    margin-bottom: var(--control-gap);
-    font-size: 16px;
-}
-
-.section-container {
-    margin-bottom: 20px;
-    padding: var(--section-padding);
-    border: 1px solid #ccc;
-    border-radius: var(--border-radius);
-}
-
-.control-row {
-    margin-bottom: var(--control-gap);
-    display: flex;
-    align-items: center;
-    gap: var(--control-gap);
-}
-
-/* Utility Classes */
-.shadow-md {
-    box-shadow: var(--shadow-color);
-}
-
-.rounded-md {
-    border-radius: var(--border-radius);
-}
-
-.hidden {
-    display: none !important; /* Use !important to ensure it overrides other display properties */
-}
-
-/* Main Section */
 .main-section {
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
 }
 
+.section-container {
+    margin-bottom: 20px;
+    padding: var(--spacing-md);
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius-md);
+}
+
+.control-row {
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* ================================== */
+/* == Component Styles ============== */
+/* ================================== */
+/* Typography */
+.color-picker__title, .section-title {
+    margin-bottom: var(--spacing-sm);
+    font-size: 24px;
+    text-align: center;
+}
+
+.sub-section-title {
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    font-size: 18px;
+}
+
 /* Color Wheel */
 .color-wheel {
-    width: var(--color-wheel-size); /* Use CSS variable */
-    height: var(--color-wheel-size); /* Use CSS variable */
+    width: var(--color-wheel-size);
+    height: var(--color-wheel-size);
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: var(--shadow-color); /* Using CSS variable directly here is also fine */
-    outline: none; /* Remove default focus outline */
+    box-shadow: var(--color-shadow);
+    outline: none;
 }
 
 .color-wheel:focus {
-    outline: 2px solid var(--accent-color);
+    outline: 2px solid var(--color-accent);
 }
 
 /* Preview Box */
@@ -120,21 +168,23 @@ body {
     width: 100px;
     height: 100px;
     border: 1px solid #ccc;
-    @apply shadow-md; /* Using utility class */
+    box-shadow: var(--color-shadow);
 }
 
 /* Loading Indicator */
 .loading-indicator {
-    margin-top: var(--control-gap);
+    margin-top: var(--spacing-sm);
     font-size: 14px;
     text-align: center;
 }
 
 /* Color Selections */
 .color-selections {
-    display: flex;
-    gap: var(--control-gap);
     margin-bottom: 20px;
+}
+
+.color-selections > div {
+    margin-bottom: var(--spacing-sm);
 }
 
 .selection {
@@ -142,11 +192,18 @@ body {
     border: 1px solid #ccc;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
-.selection.active {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 5px var(--accent-color);
+.selection:focus-within {
+    outline: 2px solid var(--color-accent);
+}
+
+.selection--active {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 5px var(--color-accent);
 }
 
 .color-swatch {
@@ -154,7 +211,6 @@ body {
     height: 30px;
     border-radius: 50%;
     cursor: pointer;
-    margin-right: 5px;
     border: 1px solid #eee;
 }
 
@@ -162,6 +218,12 @@ body {
     display: flex;
     gap: 5px;
     margin-top: 5px;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+#recent-colors-container li {
+    margin: 2px;
 }
 
 /* Color Adjustment Section */
@@ -169,7 +231,7 @@ body {
 .gradient-section .gradient-controls {
     display: flex;
     flex-direction: column;
-    gap: var(--control-gap);
+    gap: var(--spacing-sm);
 }
 
 /* Input Slider General Style */
@@ -183,7 +245,7 @@ input[type="range"] {
     outline: none;
     -webkit-transition: .2s;
     transition: opacity .2s;
-    margin: 0; /* Reset default margin */
+    margin: 0;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -192,25 +254,18 @@ input[type="range"]::-webkit-slider-thumb {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: var(--color-accent);
     cursor: pointer;
+    box-shadow: var(--color-thumb-shadow);
 }
 
 input[type="range"]::-moz-range-thumb {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: var(--color-accent);
     cursor: pointer;
-}
-
-/* Focus States */
-button:focus,
-input:focus,
-select:focus,
-.selection:focus {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 2px;
+    box-shadow: var(--color-thumb-shadow);
 }
 
 /* Select Dropdown */
@@ -218,13 +273,8 @@ select {
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    background-color: white; /* Ensure background for contrast */
-    color: var(--text-color-light);
-}
-
-.dark-mode select {
-    background-color: #444;
-    color: var(--text-color-dark);
+    background-color: white;
+    color: var(--color-text-light);
 }
 
 /* Buttons */
@@ -233,53 +283,56 @@ select {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    background-color: var(--button-bg-light);
-    color: var(--text-color-light);
+    background-color: var(--color-button-bg-light);
+    color: var(--color-text-light);
     transition: background-color 0.3s ease;
 }
 
-.dark-mode .button {
-    background-color: var(--button-bg-dark);
-    color: var(--text-color-dark);
-}
-
 .button:hover {
-    background-color: var(--button-hover-bg-light);
-}
-
-.dark-mode .button:hover {
-    background-color: var(--button-hover-bg-dark);
+    background-color: var(--color-button-hover-bg-light);
 }
 
 /* AI Suggestions Panel */
 .ai-suggestions-panel {
-    display: none; /* Default to hidden, JavaScript will control */
-    margin-top: var(--control-gap);
-    padding: var(--section-padding);
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-md);
     border: 1px solid #ccc;
-    @apply rounded-md; /* Using utility class */
-    background-color: var(--bg-color-light);
-    color: var(--text-color-light);
+    border-radius: var(--border-radius-md);
+    background-color: var(--color-bg-light);
+    color: var(--color-text-light);
+    display: none; /* Hidden by default, shown via JS */
 }
 
 .dark-mode .ai-suggestions-panel {
-    background-color: var(--bg-color-dark);
-    color: var(--text-color-dark);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-dark);
     border-color: #555;
 }
 
-.ai-suggestions-list p {
+.ai-suggestions-panel[aria-hidden="false"] {
+    display: block;
+}
+
+.ai-suggestions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 10px;
+}
+
+.ai-suggestion {
+    height: 50px;
     cursor: pointer;
-    margin-bottom: 5px;
+    border-radius: 4px;
+    box-shadow: var(--color-shadow);
 }
 
 /* Color Display Section */
 .color-display-section {
     margin-top: 20px;
-    border: 1px solid var(--glass-border);
-    @apply rounded-md; /* Using utility class */
-    background-color: var(--glass-bg);
-    box-shadow: var(--glass-shadow);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--border-radius-md);
+    background-color: var(--color-glass-bg);
+    box-shadow: var(--color-glass-shadow);
 }
 
 .color-display-section p {
@@ -288,5 +341,20 @@ select {
 
 #color-display span {
     font-weight: bold;
-    color: var(--accent-color);
-    }
+    color: var(--color-accent);
+}
+
+/* ================================== */
+/* == Utility Classes ================ */
+/* ================================== */
+.shadow-md {
+    box-shadow: var(--color-shadow);
+}
+
+.rounded-md {
+    border-radius: var(--border-radius-md);
+}
+
+.hidden {
+    display: none !important;
+}
