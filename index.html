@@ -1,9 +1,10 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futuristic Color Picker</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="light-mode">
@@ -13,7 +14,7 @@
     <section class="main-section">
       <canvas id="color-wheel" class="color-wheel" role="region" aria-label="Color Selection Area"
                 tabindex="0"></canvas>
-      <div class="preview-box" id="preview" role="img" aria-live="polite"></div>
+      <div class="preview-box" id="preview" aria-live="polite"></div>
     </section>
 
     <section class="color-display-section section-container">
@@ -25,44 +26,53 @@
         </div>
     </section>
 
-     <div id="loading" class="loading-indicator" style="display:none;">Loading...</div>
+     <div id="loading" class="loading-indicator" style="display:none;" aria-live="polite">Loading...</div>
 
     <section class="color-selections section-container">
-        <h2 class="section-title">Color Selections</h2>
-      <div class="selection active" id="selection-1">
-        <label for="color1">Select Color 1:</label>
-        <input type="color" id="color1" value="#ff0000" aria-label="Color 1" />
-      </div>
-      <div class="selection" id="selection-2">
-        <label for="color2">Select Color 2:</label>
-        <input type="color" id="color2" value="#0000ff" aria-label="Color 2" />
-      </div>
+        <h2 class="section-title">Color Selection</h2>
+        <div role="radiogroup" aria-label="Select Active Color">
+          <div class="selection active" id="selection-1">
+            <input type="radio" id="color1-radio" name="active-color" value="#ff0000" aria-label="Color 1" checked />
+            <label for="color1-radio">Select Color 1:</label>
+            <input type="color" id="color1" value="#ff0000" aria-label="Set Color 1" />
+          </div>
+          <div class="selection" id="selection-2">
+            <input type="radio" id="color2-radio" name="active-color" value="#0000ff" aria-label="Color 2" />
+            <label for="color2-radio">Select Color 2:</label>
+            <input type="color" id="color2" value="#0000ff" aria-label="Set Color 2" />
+          </div>
+        </div>
       <div class="recent-colors-section" id="recent-colors">
         <h3 class="sub-section-title">Recent Colors</h3>
-        <div id="recent-colors-container" aria-label="Recent Colors"></div>
-        <label for="maxRecentColors">Max Recent Colors:</label>
-        <input type="number" id="maxRecentColors" value="5" min="1" max="20" aria-label="Maximum Recent Colors"/>
+        <ul id="recent-colors-container" role="list" aria-label="Recent Colors"></ul>
+        <div class="control-row">
+          <label for="maxRecentColors">Maximum Recent Colors:</label>
+          <input type="number" id="maxRecentColors" value="5" min="1" max="20" aria-label="Maximum number of recent colors to store"/>
+        </div>
       </div>
     </section>
 
       <section class="color-adjustment-section section-container">
           <h2 class="section-title">Color Adjustment</h2>
-          <div class="adjustments">
-              <div class="adjustment-row">
-                  <label for="brightness">Brightness:</label>
-                  <input type="range" id="brightness" min="-100" max="100" value="0"
-                         aria-label="Brightness" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
+          <fieldset>
+              <legend>Adjust Color Properties</legend>
+              <div class="adjustments" role="toolbar" aria-label="Color Adjustments">
+                  <div class="adjustment-row">
+                      <label for="brightness">Brightness:</label>
+                      <input type="range" id="brightness" min="-100" max="100" value="0"
+                             aria-label="Brightness" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
+                  </div>
+                  <div class="adjustment-row">
+                      <label for="saturation">Saturation:</label>
+                      <input type="range" id="saturation" min="-100" max="100" value="0"
+                             aria-label="Saturation" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
+                  </div>
+                  <div class="adjustment-row">
+                      <label for="hue">Hue:</label>
+                      <input type="range" id="hue" min="0" max="359" value="0" aria-label="Hue" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0"/>
+                  </div>
               </div>
-              <div class="adjustment-row">
-                  <label for="saturation">Saturation:</label>
-                  <input type="range" id="saturation" min="-100" max="100" value="0"
-                         aria-label="Saturation" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"/>
-              </div>
-              <div class="adjustment-row">
-                  <label for="hue">Hue:</label>
-                  <input type="range" id="hue" min="0" max="359" value="0" aria-label="Hue" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0"/>
-              </div>
-          </div>
+          </fieldset>
       </section>
 
       <section class="opacity-section section-container">
@@ -101,7 +111,7 @@
               </div>
             </section>
 
-        <section class="harmonies-section section-container">
+        <section class="harmonies-section section-container" aria-live="polite">
             <h2 class="section-title">Color Harmonies</h2>
             <button id="generate-harmonies" class="button">Generate Color Harmonies</button>
             <div id="color-harmonies"></div>
@@ -115,12 +125,12 @@
                     <input type="color" id="contrast-bg" value="#ffffff">
                 </div>
                 <button id="check-contrast" class="button">Check Contrast</button>
-                <p id="contrast-result"></p>
-                <p id="accessibility-level"></p>
+                <p id="contrast-result" aria-live="polite"></p>
+                <p id="accessibility-level" aria-live="polite"></p>
             </div>
         </section>
 
-        <section class="palette-section section-container">
+        <section class="palette-section section-container" aria-live="polite">
             <h2 class="section-title">Palette Generators</h2>
             <button id="generate-palette" class="button">Generate Analogous Palette</button>
             <div id="generated-palette"></div>
@@ -131,12 +141,12 @@
             <div id="custom-preview-box" class="preview-box" aria-live="polite"></div>
         </section>
 
-        <section class="formats-section section-container">
+        <section class="formats-section section-container" aria-live="polite">
             <h2 class="section-title">Dynamic Color Formats</h2>
             <div id="color-formats"></div>
         </section>
 
-        <section class="saved-palettes-section section-container">
+        <section class="saved-palettes-section section-container" aria-live="polite">
             <h2 class="section-title">User Saved Palettes</h2>
             <div id="saved-palettes"></div>
             <button id="save-palette" class="button">Save Palette</button>
@@ -146,6 +156,10 @@
             <h2 class="section-title">AI Color Suggestions</h2>
             <div id="ai-suggestions-list"></div>
             <button id="generate-ai-suggestions" class="button">Generate AI Suggestions</button>
+        
+            <template id="ai-suggestion-item">
+                <div class="ai-suggestion" tabindex="0"></div>
+            </template>
         </section>
 
         <section class="export-section section-container">
