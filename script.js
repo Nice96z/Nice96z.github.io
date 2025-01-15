@@ -144,9 +144,15 @@ function drawSelectionIndicator() {
 
     ctx.beginPath();
     ctx.arc(indicatorX, indicatorY, INDICATOR_RADIUS, 0, 2 * Math.PI);
-    ctx.fillStyle = document.body.classList.contains('dark-mode') ? 'white' : 'black';
-    ctx.strokeStyle = document.body.classList.contains('dark-mode') ? 'black' : 'white';
-    ctx.fill();
+
+    // Set the stroke style to provide contrast
+    ctx.strokeStyle = document.body.classList.contains('dark-mode') ? 'white' : 'black';
+    ctx.lineWidth = 2; // Add a line width for better visibility
+
+    // Remove the fill to make it hollow
+    // ctx.fillStyle = document.body.classList.contains('dark-mode') ? 'white' : 'black';
+    // ctx.fill();
+
     ctx.stroke();
 }
 
@@ -450,6 +456,7 @@ function setActiveSelection(selection) {
 function getActiveColor() {
     return activeSelection === el.selection1 ? el.colorInput1.value : el.colorInput2.value;
 }
+
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
