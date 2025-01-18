@@ -9,6 +9,14 @@
 </head>
 <body class="light-mode">
   <main class="color-picker">
+    <div class="hamburger-menu">
+        <button id="hamburger-icon" aria-label="Toggle Menu">
+            ☰
+        </button>
+        <div id="minimized-tabs" class="minimized-tabs-container" aria-hidden="true">
+            <!-- Minimized tabs will go here -->
+        </div>
+    </div>
     <h1 class="color-picker-title">Futuristic Color Picker</h1>
 
     <section class="main-section">
@@ -17,8 +25,12 @@
       <div class="preview-box" id="preview" aria-live="polite"></div>
     </section>
 
-    <section class="color-display-section section-container">
-        <h2 class="section-title">Selected Color</h2>
+    <section class="color-display-section section-container" data-section-id="color-display-section">
+        <div class="section-header">
+            <h2 class="section-title">Selected Color</h2>
+            <button class="minimize-button" aria-label="Minimize Selected Color">
+                −</button>
+        </div>
         <div id="color-display">
             <p>HSL: <span id="hsl-value"></span></p>
             <p>Hex: <span id="hex-value"></span></p>
@@ -26,10 +38,14 @@
         </div>
     </section>
 
-     <div id="loading" class="loading-indicator" style="display:none;" aria-live="polite">Loading...</div>
+     <div id="loading" class="loading-indicator hidden" aria-live="polite">Loading...</div>
 
-    <section class="color-selections section-container">
-        <h2 class="section-title">Color Selection</h2>
+    <section class="color-selections section-container" data-section-id="color-selections-section">
+        <div class="section-header">
+            <h2 class="section-title">Color Selection</h2>
+            <button class="minimize-button" aria-label="Minimize Color Selection">
+                −</button>
+        </div>
         <div role="radiogroup" aria-label="Select Active Color">
           <div class="selection active" id="selection-1">
             <input type="radio" id="color1-radio" name="active-color" value="#ff0000" aria-label="Color 1" checked />
@@ -52,8 +68,12 @@
       </div>
     </section>
 
-      <section class="color-adjustment-section section-container">
-          <h2 class="section-title">Color Adjustment</h2>
+      <section class="color-adjustment-section section-container" data-section-id="color-adjustment-section">
+        <div class="section-header">
+            <h2 class="section-title">Color Adjustment</h2>
+            <button class="minimize-button" aria-label="Minimize Color Adjustment">
+                −</button>
+        </div>
           <fieldset>
               <legend>Adjust Color Properties</legend>
               <div class="adjustments" role="toolbar" aria-label="Color Adjustments">
@@ -75,8 +95,12 @@
           </fieldset>
       </section>
 
-      <section class="opacity-section section-container">
-          <h2 class="section-title">Opacity</h2>
+      <section class="opacity-section section-container" data-section-id="opacity-section">
+        <div class="section-header">
+            <h2 class="section-title">Opacity</h2>
+            <button class="minimize-button" aria-label="Minimize Opacity">
+                −</button>
+        </div>
             <div class="control-row">
                 <label for="opacity">Opacity:</label>
                 <input type="range" id="opacity" min="0" max="1" step="0.01" value="1"
@@ -84,8 +108,12 @@
             </div>
       </section>
 
-          <section class="gradient-section section-container">
-              <h2 class="section-title">Gradient</h2>
+          <section class="gradient-section section-container" data-section-id="gradient-section">
+            <div class="section-header">
+                <h2 class="section-title">Gradient</h2>
+                <button class="minimize-button" aria-label="Minimize Gradient">
+                    −</button>
+            </div>
               <div class="gradient-controls">
                 <div class="control-row">
                     <label for="gradient-type">Select Gradient Type:</label>
@@ -111,14 +139,22 @@
               </div>
             </section>
 
-        <section class="harmonies-section section-container" aria-live="polite">
-            <h2 class="section-title">Color Harmonies</h2>
+        <section class="harmonies-section section-container" aria-live="polite" data-section-id="harmonies-section">
+            <div class="section-header">
+                <h2 class="section-title">Color Harmonies</h2>
+                <button class="minimize-button" aria-label="Minimize Color Harmonies">
+                    −</button>
+            </div>
             <button id="generate-harmonies" class="button">Generate Color Harmonies</button>
             <div id="color-harmonies"></div>
         </section>
 
-        <section class="accessibility-section section-container">
-            <h2 class="section-title">Color Accessibility Checker</h2>
+        <section class="accessibility-section section-container" data-section-id="accessibility-section">
+            <div class="section-header">
+                <h2 class="section-title">Color Accessibility Checker</h2>
+                <button class="minimize-button" aria-label="Minimize Accessibility Checker">
+                    −</button>
+            </div>
             <div class="controls">
                 <div class="control-row">
                     <label for="contrast-bg">Background Color:</label>
@@ -130,51 +166,77 @@
             </div>
         </section>
 
-        <section class="palette-section section-container" aria-live="polite">
-            <h2 class="section-title">Palette Generators</h2>
+        <section class="palette-section section-container" aria-live="polite" data-section-id="palette-section">
+            <div class="section-header">
+                <h2 class="section-title">Palette Generators</h2>
+                <button class="minimize-button" aria-label="Minimize Palette Generators">
+                    −</button>
+            </div>
             <button id="generate-palette" class="button">Generate Analogous Palette</button>
             <div id="generated-palette"></div>
         </section>
 
-        <section class="customizable-preview-section section-container">
-            <h2 class="section-title">Customizable Preview</h2>
+        <section class="customizable-preview-section section-container" data-section-id="customizable-preview-section">
+            <div class="section-header">
+                <h2 class="section-title">Customizable Preview</h2>
+                <button class="minimize-button" aria-label="Minimize Customizable Preview">
+                    −</button>
+            </div>
             <div id="custom-preview-box" class="preview-box" aria-live="polite"></div>
         </section>
 
-        <section class="formats-section section-container" aria-live="polite">
-            <h2 class="section-title">Dynamic Color Formats</h2>
+        <section class="formats-section section-container" aria-live="polite" data-section-id="formats-section">
+            <div class="section-header">
+                <h2 class="section-title">Dynamic Color Formats</h2>
+                <button class="minimize-button" aria-label="Minimize Dynamic Color Formats">
+                    −</button>
+            </div>
             <div id="color-formats"></div>
         </section>
 
-        <section class="saved-palettes-section section-container" aria-live="polite">
-            <h2 class="section-title">User Saved Palettes</h2>
+        <section class="saved-palettes-section section-container" aria-live="polite" data-section-id="saved-palettes-section">
+            <div class="section-header">
+                <h2 class="section-title">User Saved Palettes</h2>
+                <button class="minimize-button" aria-label="Minimize User Saved Palettes">
+                    −</button>
+            </div>
             <div id="saved-palettes"></div>
             <button id="save-palette" class="button">Save Palette</button>
         </section>
 
-        <section class="ai-suggestions-panel section-container" id="ai-suggestions-panel" aria-hidden="true">
-            <h2 class="section-title">AI Color Suggestions</h2>
+        <section class="ai-suggestions-panel section-container" id="ai-suggestions-panel" aria-hidden="true" data-section-id="ai-suggestions-panel">
+            <div class="section-header">
+                <h2 class="section-title">AI Color Suggestions</h2>
+                <button class="minimize-button" aria-label="Minimize AI Color Suggestions">
+                    −</button>
+            </div>
             <div id="ai-suggestions-list"></div>
             <button id="generate-ai-suggestions" class="button">Generate AI Suggestions</button>
-        
+
             <template id="ai-suggestion-item">
                 <div class="ai-suggestion" tabindex="0"></div>
             </template>
         </section>
 
-        <section class="export-section section-container">
-            <h2 class="section-title">Export & Share</h2>
+        <section class="export-section section-container" data-section-id="export-section">
+            <div class="section-header">
+                <h2 class="section-title">Export & Share</h2>
+                <button class="minimize-button" aria-label="Minimize Export & Share">
+                    −</button>
+            </div>
             <button id="export-json" class="button">Export as JSON</button>
             <button id="export-scss" class="button">Export as SCSS</button>
             <button id="copy-colors" class="button">Copy Colors</button>
         </section>
 
-        <section class="theme-controls-section section-container">
-            <h2 class="section-title">Theme Controls</h2>
-            <button id="toggle-theme" class="button" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+        <section class="theme-controls-section section-container" data-section-id="theme-controls-section">
+            <div class="section-header">
+                <h2 class="section-title">Theme Controls</h2>
+                <button id="toggle-theme" class="button" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+            </div>
         </section>
 
   </main>
   <script type="module" src="script.js"></script>
 </body>
-</html>
+    </html>
