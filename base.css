@@ -1,0 +1,51 @@
+/* ================================== */
+/* == Base Styles =================== */
+/* ================================== */
+
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    color: var(--text-color-dark);
+    background-color: var(--bg-color-dark);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    position: relative; /* For background animation */
+    height: 100vh; /* Ensure full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Background Animation */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 255, 153, 0.1), rgba(18, 18, 18, 0.8));
+    z-index: -1;
+    animation: pulse 5s infinite alternate;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+/* Typography */
+.color-picker-title, .section-title {
+    margin-bottom: 1em; /* Match example's spacing */
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 0 0 5px var(--accent-color); /* Add text shadow */
+}
+
+.sub-section-title {
+    margin-top: 0;
+    margin-bottom: 0.5em; /* Adjust spacing */
+    font-size: 18px;
+    text-shadow: 0 0 3px var(--accent-color);
+}
