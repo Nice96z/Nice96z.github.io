@@ -1,0 +1,38 @@
+/* ================================== */
+/* == CSS Reset ===================== */
+/* ================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body, h1, h2, h3, p, ul, ol, li, figure, figcaption, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+body {
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+article > * + * {
+    margin-top: 1em;
+}
+
+a:not([class]) {
+    text-decoration-skip-ink: auto;
+}
