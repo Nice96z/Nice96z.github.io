@@ -1,0 +1,292 @@
+/* ================================== */
+/* == Component Styles ============== */
+/* ================================== */
+
+/* Color Wheel */
+.color-wheel {
+    width: var(--color-wheel-size);
+    height: var(--color-wheel-size);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--highlight-color); /* Glowing shadow */
+    outline: none;
+    transition: filter 0.3s;
+    background: linear-gradient(45deg, #ff0099, #493240); /* Apply a gradient */
+}
+
+.color-wheel:hover {
+    filter: brightness(1.2);
+}
+
+.color-wheel:focus {
+    outline: 2px solid var(--color-active-border);
+}
+
+/* Preview Box */
+.preview-box {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--color-glass-border); /* Neon border */
+    box-shadow: var(--color-glass-shadow);
+    border-radius: var(--border-radius);
+    background: rgba(0, 0, 0, 0.7); /* Dark background for preview */
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    margin-top: var(--spacing-sm);
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Color Selections */
+.color-selections {
+    margin-bottom: 1.5em; /* Match example's spacing */
+}
+
+.color-selections > div {
+    margin-bottom: 0.5em; /* Adjust spacing */
+}
+
+.selection {
+    padding: 10px;
+    border: 2px solid var(--color-glass-border); /* Neon border */
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.3); /* Dark background for selection */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.selection:focus-within,
+.selection:hover {
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 10px var(--highlight-color);
+}
+
+.selection--active {
+    border-color: var(--color-active-border);
+    box-shadow: 0 0 10px var(--color-active-border);
+}
+
+.color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--bg-color-dark); /* Emphasize the swatch */
+    transition: transform 0.2s;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+#recent-colors-container {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+#recent-colors-container li {
+    margin: 2px;
+}
+
+/* Color Adjustment Section */
+.color-adjustment-section .adjustments,
+.gradient-section .gradient-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+/* Input Slider General Style */
+input[type="range"] {
+    flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: #555; /* Darker background for sliders */
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin: 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    box-shadow: var(--color-thumb-shadow);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    box-shadow: var(--color-thumb-shadow);
+}
+
+/* Select Dropdown */
+select {
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    border: 1px solid var(--accent-color); /* Highlighted border */
+    background-color: #333; /* Darker background */
+    color: var(--text-color-dark);
+}
+
+/* Buttons */
+.button {
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--color-button-bg-light);
+    color: var(--text-color-dark);
+    transition: all 0.3s;
+    box-shadow: 0 0 10px var(--highlight-color);
+}
+
+.button:hover {
+    background-color: var(--color-button-hover-bg-light);
+    box-shadow: 0 0 20px var(--highlight-color);
+}
+
+/* AI Suggestions Panel */
+.ai-suggestions-panel {
+    margin-top: var(--spacing-sm);
+    padding: 1.5em; /* Match example's padding */
+    border: 2px solid var(--color-glass-border); /* Neon border */
+    border-radius: var(--border-radius);
+    background: rgba(0, 0, 0, 0.5); /* Dark background */
+    color: var(--text-color-dark);
+    display: none; /* Hidden by default, shown via JS */
+    box-shadow: 0 0 15px var(--shadow-color);
+}
+
+.ai-suggestions-panel[aria-hidden="false"] {
+    display: block;
+}
+
+.ai-suggestions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 10px;
+}
+
+.ai-suggestion {
+    height: 50px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--shadow-color);
+    transition: box-shadow 0.3s;
+}
+
+.ai-suggestion:hover {
+    box-shadow: 0 0 15px var(--highlight-color);
+}
+
+/* Color Display Section */
+.color-display-section {
+    margin-top: 1.5em; /* Match example's spacing */
+    border: 2px solid var(--color-glass-border); /* Neon border */
+    border-radius: var(--border-radius);
+    background-color: rgba(0, 0, 0, 0.5); /* Dark background */
+    box-shadow: 0 0 15px var(--shadow-color);
+    padding: 1.5em;
+}
+
+.color-display-section p {
+    margin: 0.5em 0;
+}
+
+#color-display span {
+    font-weight: bold;
+    color: var(--accent-color);
+    text-shadow: 0 0 3px var(--accent-color);
+}
+
+/* New Hamburger Menu Styles */
+.hamburger-menu {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+#hamburger-icon {
+    background: none;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    color: var(--accent-color);
+    transition: color 0.3s ease;
+}
+
+#hamburger-icon:hover {
+    color: var(--highlight-color);
+}
+
+.minimized-tabs-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--bg-color-dark);
+    border: 1px solid var(--accent-color);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 200px;
+    box-shadow: 2px 2px 5px var(--shadow-color);
+}
+
+.minimized-tabs-container[aria-hidden="false"] {
+    display: flex;
+}
+
+.minimized-tab-button {
+    background-color: #444;
+    color: var(--text-color-dark);
+    border: none;
+    padding: 5px 10px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    text-align: right;
+    width: 100%;
+}
+
+.minimized-tab-button:hover {
+    background-color: #666;
+}
+
+/* Minimize Button */
+.minimize-button {
+    background: none;
+    border: none;
+    font-size: 1.2em; /* Slightly smaller minimize button */
+    cursor: pointer;
+    color: var(--text-color-dark);
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.minimize-button:hover {
+    opacity: 1;
+}
