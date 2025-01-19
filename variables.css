@@ -1,0 +1,40 @@
+/* ========================================= */
+/*              Root Variables              */
+/* ========================================= */
+:root {
+    /*Dark Mode Variables */
+    --bg-color-dark: #121212;
+    --text-color-dark: #ffffff;
+    --accent-color: #00ff99;
+    --highlight-color: rgba(0, 255, 153, 0.5);
+    --shadow-color: rgba(0, 255, 153, 0.3);
+    
+    /*Light Mode Variables*/
+    --color-bg-light: #f4f4f4; /* Consider if you want a light mode */
+    --color-text-light: #333;
+    --color-button-bg-light: var(--accent-color); /* Use accent for buttons */
+    --color-button-hover-bg-light: rgba(0, 255, 153, 0.8);
+    
+    /* Shared/Components Variables */
+     --color-glass-bg: rgba(255, 255, 255, 0.05); /* Subtle glass effect */
+    --color-glass-border: rgba(0, 255, 153, 0.2); /* Neon border */
+    --color-glass-shadow: inset 0 2px 4px rgba(0, 255, 153, 0.05); /* Neon inner shadow */
+    --color-button-bg-dark: #333;
+    --color-button-hover-bg-dark: #444;
+    --color-thumb-shadow: 0 0 5px var(--highlight-color);
+    --color-active-border: var(--accent-color);
+    
+    /* Spacing and Sizes */
+    --border-radius: 10px;
+    --border-radius-md: var(--border-radius);
+    --spacing-md: 15px;
+    --spacing-sm: 10px;
+    --color-wheel-size: 200px;
+    
+    --color-shadow: rgba(0, 0, 0, 0.1);
+   
+    /* Typograpy */
+    --font-family-base: 'Arial', sans-serif; /* Consistent font */
+    --font-size-base: 16px;
+    
+}
