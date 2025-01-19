@@ -1,0 +1,69 @@
+/* ================================== */
+/* == Layout Styles ================= */
+/* ================================== */
+.color-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 80%; /* Limit width like in the example */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.main-section {
+    display: flex;
+    gap: 1.5em; /* Match example's gap */
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.section-container {
+    margin-bottom: 1.5em; /* Match example's spacing */
+    padding: 1.5em; /* Match example's padding */
+    border-radius: var(--border-radius); /* Use the defined border-radius */
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.5)); /* Futuristic background */
+    box-shadow: 0 0 20px var(--shadow-color); /* Glowing shadow */
+    transition: transform 0.3s, box-shadow 0.3s;
+    flex: 1; /* Allow sections to grow and take available space */
+}
+
+.section-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px var(--highlight-color);
+}
+
+/* Hidden Section Style */
+.section-container.minimized {
+    display: none;
+}
+
+.control-row {
+    margin-bottom: 1em; /* Match example's spacing */
+    display: flex;
+    align-items: center;
+    gap: 0.5em; /* Adjust gap as needed */
+}
+
+/* ========================================= */
+/*     Responsive Design for Smaller Screens  */
+/* ========================================= */
+@media (max-width: 768px) {
+    .main-section {
+        flex-direction: column;
+    }
+
+    .color-picker {
+        width: 90%;
+    }
+
+    .section-container {
+        margin-bottom: 1em;
+        padding: 1em;
+    }
+
+    .control-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+}
