@@ -1,0 +1,14 @@
+/* ================================== */
+/* == Utility Classes ================ */
+/* ================================== */
+.shadow-md {
+    box-shadow: var(--color-shadow);
+}
+
+.rounded-md {
+    border-radius: var(--border-radius-md);
+}
+
+.hidden {
+    display: none !important;
+}
